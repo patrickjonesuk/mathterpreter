@@ -1,12 +1,13 @@
 from mathterpreter.tokens import Token, TokenType
 from mathterpreter.exceptions import MathSyntaxError
+from typing import List
 
 class Lexer:
 
     def __init__(self, string: str = ""):
         self.string = string
         self.__string = iter(string)
-        self.tokens: list[Token] = []
+        self.tokens: List[Token] = []
         self.__character = None
         self.__iterate_string__()
 

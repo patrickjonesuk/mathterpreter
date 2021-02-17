@@ -23,3 +23,10 @@ tree = parser.parse()
 result = tree.evaluate()
 print(result)
 ```
+
+Command line
+```shell script
+python3 -m mathterpreter 54-3*(2+1)-3
+# or
+echo 54-3*(2+1)-3 | python3 -m mathterpreter
+```

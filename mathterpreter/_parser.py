@@ -1,10 +1,10 @@
 from mathterpreter.nodes import *
 from mathterpreter.tokens import TokenType, Token
 from mathterpreter.exceptions import MathSyntaxError
-
+from typing import List
 
 class Parser:
-    def __init__(self, tokens: list[Token]):
+    def __init__(self, tokens: List[Token]):
         self.__tokens = iter(tokens)
         self.token_list = tokens
         self.__token = None

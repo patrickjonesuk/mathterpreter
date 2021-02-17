@@ -8,7 +8,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     LONG_DESCRIPTION = "\n" + fh.read()
 
 DESCRIPTION = "A lightweight and basic maths interpreter"
-VERSION = "1.0.0"
+VERSION = "1.0.2"
 
 setup(
     name="mathterpreter",
@@ -20,12 +20,12 @@ setup(
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
-    install_requires=['enum', 'dataclasses'],
+    install_requires=['dataclasses'],
     keywords=['python', 'math', 'maths'],
     classifiers=[
         "Programming Language :: Python :: 3.7"
     ],
     entry_points = {
-        "console_scripts": ["calc=mathterpreter.cli:main"]
+        "console_scripts": ["mathterpreter=mathterpreter.__main__:main"]
     }
 )
