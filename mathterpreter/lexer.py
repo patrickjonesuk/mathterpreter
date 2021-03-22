@@ -27,8 +27,7 @@ class Lexer:
         string = self._character
         self._iterate_string()
         while self._character is not None \
-                and (self._character.isdigit() or self._character == "."
-                     or self._character == "e" or self._character == "+" or self._character == "-"):
+                and (self._character.isdigit() or self._character in (".", "e", "+", "-",)):
             if self._character == ".":
                 if has_decimal_point:
                     raise MathSyntaxError("Second decimal point in the number",
