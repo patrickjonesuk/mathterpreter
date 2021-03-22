@@ -1,5 +1,6 @@
+import typing
 from dataclasses import dataclass
-from typing import Optional
+from decimal import Decimal
 
 
 class TokenType:
@@ -27,13 +28,13 @@ FORMATS = {
     TokenType.POWER_OPERATOR: "^",
     TokenType.OPENING_BRACKET: "(",
     TokenType.CLOSING_BRACKET: ")"
-
 }
+
 
 @dataclass
 class Token:
     type: TokenType
-    value: Optional[float] = None
+    value: typing.Optional[typing.Union[Decimal, float]] = None
 
     def __str__(self):
         return FORMATS[self.type].format(self)

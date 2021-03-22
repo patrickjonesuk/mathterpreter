@@ -1,5 +1,7 @@
+import typing
 from dataclasses import dataclass
 import math
+from decimal import Decimal
 
 
 @dataclass
@@ -10,7 +12,7 @@ class Node:
 
 @dataclass
 class NumberNode(Node):
-    value: float
+    value: typing.Union[Decimal, float]
 
     def __repr__(self):
         return str(self.value)
