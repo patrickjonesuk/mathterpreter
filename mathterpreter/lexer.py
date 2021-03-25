@@ -2,48 +2,69 @@ from mathterpreter.tokens import Token, TokenType
 from mathterpreter.exceptions import MathSyntaxError
 from typing import List
 
+
+def expand(compact_dict):
+    result = {}
+    for item in compact_dict:
+        if isinstance(item, tuple):
+            for key in item:
+                result[key] = compact_dict[item]
+        else:
+            result[item] = compact_dict[item]
+    return result
+
+
+TOKENS = {
+    "+": lambda: TokenType.ADDITION_OPERATOR,
+    "-": lambda: TokenType.SUBTRACTION_OPERATOR,
+    "*": lambda: TokenType.MULTIPLICATION_OPERATOR,
+    "/": lambda: TokenType.DIVISION_OPERATOR,
+    ("sqrt", "√"): lambda: TokenType.SQRT_OPERATOR,
+    "^": lambda: TokenType.POWER_OPERATOR,
+    "(": lambda: TokenType.OPENING_BRACKET,
+    ")": lambda: TokenType.CLOSING_BRACKET
+}
+
+
 class Lexer:
 
     def __init__(self, string: str = ""):
         self.string = string
         self.__string = iter(string)
         self.tokens: List[Token] = []
+        self.__expanded_tokens = expand(TOKENS)
         self.__character = None
         self.__iterate_string__()
 
-    def __iterate_string__(self):
+    def __iterate_string__(self, append=False):
         try:
-            self.__character = next(self.__string)
+            next_char = next(self.__string)
+            self.__character = self.__character + next_char if append else next_char
         except StopIteration:
             self.__character = None
 
+
     def generate_tokens(self):
         while self.__character is not None:
+            found = False
             if self.__character in (" ", "\t", "\n"):
                 self.__iterate_string__()
                 continue
-            elif self.__character == "+":
-                yield Token(TokenType.ADDITION_OPERATOR)
-            elif self.__character == "-":
-                yield Token(TokenType.SUBTRACTION_OPERATOR)
-            elif self.__character == "*":
-                yield Token(TokenType.MULTIPLICATION_OPERATOR)
-            elif self.__character == "/":
-                yield Token(TokenType.DIVISION_OPERATOR)
-            elif self.__character in ("**", "^"):
-                yield Token(TokenType.POWER_OPERATOR)
-            elif self.__character in ("sqrt", "√"):
-                yield Token(TokenType.SQRT_OPERATOR)
-            elif self.__character == "(":
-                yield Token(TokenType.OPENING_BRACKET)
-            elif self.__character == ")":
-                yield Token(TokenType.CLOSING_BRACKET)
-            if self.__character in ("-", "+", "*", "/", "**", "^", "sqrt", "√", "(", ")"):
+            if self.__character in self.__expanded_tokens:
+                yield Token(self.__expanded_tokens[self.__character]())
                 self.__iterate_string__()
+                found = True
             elif self.__character == "." or self.__character.isdigit():
                 yield self.__get_number__()
+                found = True
             else:
-                raise MathSyntaxError("Unsupported token", f"{self.string}\n{'^'.rjust(self.string.index(self.__character) + 1)}")
+                for token in self.__expanded_tokens:
+                    if token.startswith(self.__character):
+                        self.__iterate_string__(True)
+                        found = True
+            if not found:
+                raise MathSyntaxError("Unsupported token",
+                                      f"{self.string}\n{'^'.rjust(self.string.index(self.__character) + 1)}")
 
     def tokenize(self):
         for token in self.generate_tokens():
