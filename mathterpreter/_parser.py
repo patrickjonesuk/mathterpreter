@@ -31,32 +31,32 @@ class Parser:
         if self._token is None:
             output = ''.join([z.__str__() for z in self.token_list])
             raise MathSyntaxError("Expression expected", f"{output}\n{'^^^'.rjust(len(output) + 3)}")
-        result = self._multiplication_division()
+        result = self._multiplication_division_modulo()
         while self._token is not None:
             if self._token.type == TokenType.ADDITION_OPERATOR:
                 self._iterate_token()
-                result = AdditionNode(result, self._multiplication_division())
+                result = AdditionNode(result, self._multiplication_division_modulo())
             elif self._token.type == TokenType.SUBTRACTION_OPERATOR:
                 self._iterate_token()
-                result = SubtractionNode(result, self._multiplication_division())
+                result = SubtractionNode(result, self._multiplication_division_modulo())
             else:
                 break
 
         return result
 
     def _multiplication_division_modulo(self):
-        result = self._exponentiation_root()
+        result = self._exponentiation_root_factorial()
 
         while self._token is not None:
             if self._token.type == TokenType.MULTIPLICATION_OPERATOR:
                 self._iterate_token()
-                result = MultiplicationNode(result, self._exponentiation_root())
+                result = MultiplicationNode(result, self._exponentiation_root_factorial())
             elif self._token.type == TokenType.DIVISION_OPERATOR:
                 self._iterate_token()
-                result = DivisionNode(result, self._exponentiation_root())
+                result = DivisionNode(result, self._exponentiation_root_factorial())
             elif self._token.type() == TokenType.MODULO_OPERATOR:
                 self._iterate_token()
-                result = ModuloNode(result, self._exponentiation_root())
+                result = ModuloNode(result, self._exponentiation_root_factorial())
             elif self._token.type == TokenType.OPENING_BRACKET:
                 result = MultiplicationNode(result, self._literal_polarity())
             else:
