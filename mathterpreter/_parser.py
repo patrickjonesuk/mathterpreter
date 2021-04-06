@@ -44,7 +44,7 @@ class Parser:
 
         return result
 
-    def _multiplication_division(self):
+    def _multiplication_division_modulo(self):
         result = self._exponentiation_root()
 
         while self._token is not None:
@@ -54,6 +54,9 @@ class Parser:
             elif self._token.type == TokenType.DIVISION_OPERATOR:
                 self._iterate_token()
                 result = DivisionNode(result, self._exponentiation_root())
+            elif self._token.type() == TokenType.MODULO_OPERATOR:
+                self._iterate_token()
+                result = ModuloNode(result, self._exponentiation_root())
             elif self._token.type == TokenType.OPENING_BRACKET:
                 result = MultiplicationNode(result, self._literal_polarity())
             else:
@@ -61,7 +64,7 @@ class Parser:
 
         return result
 
-    def _exponentiation_root(self):
+    def _exponentiation_root_factorial(self):
         result = self._literal_polarity()
         while self._token is not None:
             if self._token.type == TokenType.POWER_OPERATOR:
@@ -70,6 +73,9 @@ class Parser:
             elif self._token.type == TokenType.SQRT_OPERATOR:
                 self._iterate_token()
                 result = RootNode(result, self._literal_polarity())
+            elif self._token.type == TokenType.FACTORIAL_OPERATOR:
+                self._iterate_token()
+                result = RootNode(result, self._literal_polarity)
             else:
                 break
         return result
