@@ -1,5 +1,5 @@
 from mathterpreter.nodes import *
-from mathterpreter.tokens import TokenType, Token
+from mathterpreter.tokens import TokenType, Token, FORMATS
 from mathterpreter.exceptions import MathSyntaxError
 from typing import List
 
@@ -11,6 +11,7 @@ class Parser:
         self._token = None
         self._index = -1
         self._iterate_token()
+        print(tokens)
 
     def _iterate_token(self):
         try:
@@ -45,18 +46,18 @@ class Parser:
         return result
 
     def _multiplication_division_modulo(self):
-        result = self._exponentiation_root_factorial()
+        result = self._exponentiation_root()
 
         while self._token is not None:
             if self._token.type == TokenType.MULTIPLICATION_OPERATOR:
                 self._iterate_token()
-                result = MultiplicationNode(result, self._exponentiation_root_factorial())
+                result = MultiplicationNode(result, self._exponentiation_root())
             elif self._token.type == TokenType.DIVISION_OPERATOR:
                 self._iterate_token()
-                result = DivisionNode(result, self._exponentiation_root_factorial())
-            elif self._token.type() == TokenType.MODULO_OPERATOR:
+                result = DivisionNode(result, self._exponentiation_root())
+            elif self._token.type == TokenType.MODULO_OPERATOR:
                 self._iterate_token()
-                result = ModuloNode(result, self._exponentiation_root_factorial())
+                result = ModuloNode(result, self._exponentiation_root())
             elif self._token.type == TokenType.OPENING_BRACKET:
                 result = MultiplicationNode(result, self._literal_polarity())
             else:
@@ -64,7 +65,7 @@ class Parser:
 
         return result
 
-    def _exponentiation_root_factorial(self):
+    def _exponentiation_root(self):
         result = self._literal_polarity()
         while self._token is not None:
             if self._token.type == TokenType.POWER_OPERATOR:
@@ -73,9 +74,6 @@ class Parser:
             elif self._token.type == TokenType.SQRT_OPERATOR:
                 self._iterate_token()
                 result = RootNode(result, self._literal_polarity())
-            elif self._token.type == TokenType.FACTORIAL_OPERATOR:
-                self._iterate_token()
-                result = RootNode(result, self._literal_polarity)
             else:
                 break
         return result

@@ -14,8 +14,7 @@ class TokenType:
     POWER_OPERATOR = 7
     OPENING_BRACKET = 8
     CLOSING_BRACKET = 9
-    FACTORIAL_OPERATOR = 10
-    MODULO_OPERATOR = 11
+    MODULO_OPERATOR = 10
 
 
 FORMATS = {
@@ -30,7 +29,6 @@ FORMATS = {
     TokenType.POWER_OPERATOR: "^",
     TokenType.OPENING_BRACKET: "(",
     TokenType.CLOSING_BRACKET: ")",
-    TokenType.FACTORIAL_OPERATOR: "!",
     TokenType.MODULO_OPERATOR: "%",
 }
 

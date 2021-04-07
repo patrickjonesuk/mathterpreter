@@ -111,17 +111,8 @@ class ModuloNode(OperationNode):
     def __repr__(self):
         return f"({self.first_operand}%{self.second_operand})"
 
-    def evaluate(self):
+    def evaluate(self) -> float:
         return self.first_operand.evaluate() % self.second_operand.evaluate()
 
-@dataclass
-class SingleOperandNode(Node):
-    operand: Node
 
-@dataclass
-class FactorialNode(SingleOperandNode):
-    def __repr__(self):
-        return f"({self.operand}!)"
 
-    def evaluate(self):
-        return math.factorial(self.operand.evaluate())
