@@ -26,6 +26,8 @@ TOKENS = {
     "^": lambda: TokenType.POWER_OPERATOR,
     "(": lambda: TokenType.OPENING_BRACKET,
     ")": lambda: TokenType.CLOSING_BRACKET,
+    "!": lambda: TokenType.FACTORIAL_OPERATOR,
+    "%": lambda: TokenType.MODULO_OPERATOR,
 }
 CONSTANTS = {
     ("pi", "π"): lambda: math.pi,

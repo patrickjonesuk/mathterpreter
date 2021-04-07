@@ -1,5 +1,5 @@
 from mathterpreter.nodes import *
-from mathterpreter.tokens import TokenType, Token
+from mathterpreter.tokens import TokenType, Token, FORMATS
 from mathterpreter.exceptions import MathSyntaxError
 from typing import List
 
@@ -11,6 +11,7 @@ class Parser:
         self._token = None
         self._index = -1
         self._iterate_token()
+        print(tokens)
 
     def _iterate_token(self):
         try:
@@ -31,20 +32,20 @@ class Parser:
         if self._token is None:
             output = ''.join([z.__str__() for z in self.token_list])
             raise MathSyntaxError("Expression expected", f"{output}\n{'^^^'.rjust(len(output) + 3)}")
-        result = self._multiplication_division()
+        result = self._multiplication_division_modulo()
         while self._token is not None:
             if self._token.type == TokenType.ADDITION_OPERATOR:
                 self._iterate_token()
-                result = AdditionNode(result, self._multiplication_division())
+                result = AdditionNode(result, self._multiplication_division_modulo())
             elif self._token.type == TokenType.SUBTRACTION_OPERATOR:
                 self._iterate_token()
-                result = SubtractionNode(result, self._multiplication_division())
+                result = SubtractionNode(result, self._multiplication_division_modulo())
             else:
                 break
 
         return result
 
-    def _multiplication_division(self):
+    def _multiplication_division_modulo(self):
         result = self._exponentiation_root()
 
         while self._token is not None:
@@ -54,6 +55,9 @@ class Parser:
             elif self._token.type == TokenType.DIVISION_OPERATOR:
                 self._iterate_token()
                 result = DivisionNode(result, self._exponentiation_root())
+            elif self._token.type == TokenType.MODULO_OPERATOR:
+                self._iterate_token()
+                result = ModuloNode(result, self._exponentiation_root())
             elif self._token.type == TokenType.OPENING_BRACKET:
                 result = MultiplicationNode(result, self._literal_polarity())
             else:
